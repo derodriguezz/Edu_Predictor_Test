@@ -19,7 +19,7 @@ cargar_datos()
 with st.sidebar:
     selected = option_menu(
         menu_title="Menú Principal",
-        options=['Inicio', 'Pruebas', 'Implementación', 'Generar Indicativo', 'Realizar Predicción', 'Chatbot']
+        options=['Inicio', 'Pruebas', 'Implementación', 'Generar Indicativo', 'Realizar Predicción']
     )
 
 # Sección de Inicio
@@ -128,82 +128,6 @@ if selected == 'Realizar Predicción':
         históricos. Por ahora, estamos desarrollando esta funcionalidad.
     """)
 
-    import streamlit as st
-import requests
-import json
-
-# Configuración del API Llama
-api_key = "da74ebaa-3c62-417c-804c-1bb387f7ff9c"
-api_url = "https://api.awanllm.com/v1/completions"
-model_name = "Meta-Llama-3-8B-Instruct"
-
-# Función para enviar el comentario a la API de Llama y recibir la respuesta
-def obtener_respuesta_llama(mensaje_usuario):
-    prompt = f"""
-<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-
-You are an AI assistant that interacts with users in Spanish, providing insights and responses.
-
-<|eot_id|><|start_header_id|>user<|end_header_id|>
-
-{mensaje_usuario}
-
-<|eot_id|><|start_header_id|>assistant<|end_header_id|>
-"""
-    payload = json.dumps({
-        "model": model_name,
-        "prompt": prompt,
-        "repetition_penalty": 1.1,
-        "temperature": 0.4,
-        "top_p": 1,
-        "top_k": 40,
-        "max_tokens": 350,
-        "stream": False
-    })
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f"Bearer {api_key}"
-    }
-
-    try:
-        response = requests.post(api_url, headers=headers, data=payload)
-        if response.status_code == 200:
-            resultado = response.json()
-            return resultado.get("choices", [{}])[0].get("text", "").strip()
-        else:
-            return f"Error {response.status_code}: {response.text}"
-    except Exception as e:
-        return f"Error: {e}"
-
-# Sección de Chatbot
-if selected == 'Chatbot':
-    st.title("Asistente de IA")
-    
-    # Inicializar el historial de chat en la sesión
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-
-    # Mostrar el historial de chat
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    # Entrada del usuario
-    prompt = st.chat_input("Escribe tu pregunta aquí...")
-    if prompt:
-        # Mostrar mensaje del usuario en la interfaz y guardarlo en el historial
-        with st.chat_message("user"):
-            st.markdown(prompt)
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        
-        # Obtener respuesta de la IA
-        respuesta = obtener_respuesta_llama(prompt)
-        
-        # Mostrar respuesta del asistente en la interfaz y guardarla en el historial
-        with st.chat_message("assistant"):
-            st.markdown(respuesta)
-        st.session_state.messages.append({"role": "assistant", "content": respuesta})
-
 # Sección de Generar Indicativo
 if selected == 'Generar Indicativo':
     st.title(f"Obtenga el indicativo anual de grupos por centro de formación - En construcción")
@@ -211,5 +135,3 @@ if selected == 'Generar Indicativo':
         En esta sección, podrás generar el indicativo anual de grupos por centro de formación. Actualmente, esta
         funcionalidad está en desarrollo y será implementada pronto.
     """)
-
-
