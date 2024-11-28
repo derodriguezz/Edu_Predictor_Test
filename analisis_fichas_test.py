@@ -2,6 +2,8 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
 import os
+import estimacion_fichas
+import archivo_pruebas
 
 # Cargar archivo comparativo_historico.py automáticamente
 file_path = r'./comparativo_historico.py'
@@ -19,7 +21,7 @@ cargar_datos()
 with st.sidebar:
     selected = option_menu(
         menu_title="Menú Principal",
-        options=['Inicio', 'Pruebas', 'Implementación', 'Generar Indicativo', 'Realizar Predicción', 'Chatbot']
+        options=['Inicio', 'Pruebas', 'Implementación', 'Generar Indicativo', 'Realizar Predicción', 'Chatbot','Estimación Fichas','pruebas_jersson']
     )
 
 # Sección de Inicio
@@ -128,7 +130,7 @@ if selected == 'Realizar Predicción':
         históricos. Por ahora, estamos desarrollando esta funcionalidad.
     """)
 
-    import streamlit as st
+import streamlit as st
 import requests
 import json
 
@@ -212,4 +214,11 @@ if selected == 'Generar Indicativo':
         funcionalidad está en desarrollo y será implementada pronto.
     """)
 
+if selected == 'Estimación Fichas':
+    estimacion_fichas.mostrar_estimacion_fichas()  # Llama a la función del archivo estimacion_fichas
+else:
+    st.title("Bienvenido a la aplicación")
+    st.write("Selecciona una opción del menú.")
 
+if selected == 'pruebas_Desarrollo':
+    archivo_pruebas.Descargar_dataframe()
